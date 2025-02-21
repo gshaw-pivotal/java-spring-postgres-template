@@ -1,0 +1,8 @@
+-- DROP TABLE Foo;
+--
+-- CREATE TABLE IF NOT EXISTS Foo (
+--     id UUID PRIMARY KEY,
+--     record_value VARCHAR(255)
+-- );
+--
+-- INSERT INTO Foo(id, record_value) VALUES ('f98545a5-4928-45e4-bbd3-8d64123165dd', 'foobar');
