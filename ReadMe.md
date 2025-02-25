@@ -1,3 +1,7 @@
+## To build docker
+
+From root: `docker compose build`
+
 ## To start docker image
 
 From root: `docker compose up -d`
@@ -18,6 +22,8 @@ List tables in the DB/schema:
 `\dt`
 
 ## Development Notes
+
+### Database / Repository
 
 The Spring Boot application can interact with the Postgres DB utilizing the following:
 
@@ -46,3 +52,44 @@ public interface FooRepository extends CrudRepository<Foo, UUID> {
 }
 ```
 - Here the two parameters associated with the CrudRepository is the POJO that matches with the table and the type of the Primary Key. In this example the POJO for the table is Foo and the primary key is a UUID.
+
+### Controller / Rest API
+
+Annotate class with `@RestController`, then for each endpoint create a public method with the annotation to support the Rest method/type.
+
+Sample endpoints include:
+```java
+@GetMapping(value = "/api/foo/{id}")
+public ResponseEntity<Foo> getFoo(@PathVariable Foo foo) {
+    return ResponseEntity.ok(...);
+}
+```
+```java
+@PostMapping(value = "/api/foo")
+public ResponseEntity<Foo> getFoo(@RequestBody Foo foo) {
+    return ResponseEntity.ok(...);
+}
+```
+
+### Configuring Beans
+
+To have control over beans you can create a configuration class and explicitly bean up classes.
+```java
+@Configuration
+public class Configuration {
+
+    @Bean
+    public FooService fooService(...) {
+        return new FooService(...);
+    }
+}
+```
+And the associated class being `beaned` in the configuration class has a constructor method.
+```java
+public class FooService {
+    public FooService(...) {
+        this.a = a;
+        ...
+    }
+}
+```
