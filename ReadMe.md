@@ -23,6 +23,46 @@ List tables in the DB/schema:
 
 ## Development Notes
 
+### Using a Command Line Runner to populate the DB
+
+While the DB can be populate via statements in a `schema.sql` file located in the resource directory an alternative is to use a command line runner and a json file.
+
+In the source class with the main method add another method like the following:
+```java
+@Bean
+public CommandLineRunner commandLineRunner(FooService service) {
+	return args -> {
+		ObjectMapper mapper = new ObjectMapper();
+		TypeReference<List<Foo>> typeReference = new TypeReference<>() {};
+
+		InputStream inputStream = TypeReference.class.getResourceAsStream("/json/foo.json");
+		try {
+			List<Foo> foos = mapper.readValue(inputStream, typeReference);
+			service.loadFoos(foos);
+		} catch (Exception e) {
+			System.out.println("Unable to load and save foo: " + e.getMessage());
+		}
+	};
+}
+```
+The in `resources/json` have a file with a matching name eg. foo.json and using a JSON format add all the records you wish to load.
+```json
+[
+  {
+    "id": 1,
+    "desc": "Foo-1-Desc"
+  },
+  {
+    "id": 2,
+    "desc": "Foo-2-Desc"
+  },
+  {
+    "id": 3,
+    "desc": "Foo-3-Desc"
+  }
+]
+```
+
 ### Database / Repository
 
 The Spring Boot application can interact with the Postgres DB utilizing the following:
